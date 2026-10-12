@@ -8,39 +8,36 @@ endif ()
 find_package(ament_cmake REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(gz_common_vendor REQUIRED)
-find_package(gz-common REQUIRED)
+find_package(gz-common REQUIRED COMPONENTS geospatial graphics)
 find_package(gz_sim_vendor REQUIRED)
 find_package(gz-sim REQUIRED)
-find_package(gz_rendering_vendor REQUIRED)
-find_package(gz-rendering REQUIRED)
-find_package(gz_sensors_vendor REQUIRED)
-find_package(gz-sensors REQUIRED)
 find_package(gz_plugin_vendor REQUIRED)
 find_package(gz-plugin REQUIRED COMPONENTS register)
 find_package(rclcpp REQUIRED)
 find_package(map_bag REQUIRED)
 find_package(map_bag_msgs REQUIRED)
 find_package(map_bag_ros REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(hector_ground_truth_gazebo_plugins_msgs REQUIRED)
 
 include_directories(include)
 
-add_library(elevation_map_ground_truth_plugin SHARED src/elevation_map_ground_truth_plugin.cpp)
+add_library(elevation_map_ground_truth_plugin SHARED
+  src/elevation_map_ground_truth_plugin.cpp
+  src/world_triangles.cpp
+)
 ament_target_dependencies(elevation_map_ground_truth_plugin PUBLIC
   Eigen3
   rclcpp
   map_bag
   map_bag_msgs
   map_bag_ros
-  std_msgs
   hector_ground_truth_gazebo_plugins_msgs
 )
 target_link_libraries(elevation_map_ground_truth_plugin PUBLIC
   gz-common::gz-common
+  gz-common::geospatial
+  gz-common::graphics
   gz-sim::gz-sim
-  gz-rendering::gz-rendering
-  gz-sensors::gz-sensors
   gz-plugin::gz-plugin
 )
 

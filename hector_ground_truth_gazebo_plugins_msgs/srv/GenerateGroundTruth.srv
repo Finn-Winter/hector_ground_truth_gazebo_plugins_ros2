@@ -8,9 +8,9 @@ float64 max_z_height
 float64 truncation_distance
 # Map resolution in m/cell
 float64 resolution
-# Length in x-direction in cells
+# Length in x-direction in meters
 float64 x_size
-# Length in y-direction in cells
+# Length in y-direction in meters
 float64 y_size
 # Samples per cell dimension (actual samples is samples^2, because we make a samples*samples grid)
 int64 samples
@@ -19,3 +19,7 @@ int64 samples
 bool quiet
 ---
 map_bag_msgs/Map map
+# False if the request was rejected, in which case map is empty and message says why.
+bool success
+# Human readable explanation if success is false.
+string message
