@@ -24,12 +24,9 @@
   <depend>gz_common_vendor</depend>
   <depend>gz_sim_vendor</depend>
   <depend>gz_plugin_vendor</depend>
-  <depend>gz_rendering_vendor</depend>
-  <depend>gz_sensors_vendor</depend>
   <depend>map_bag</depend>
   <depend>map_bag_msgs</depend>
   <depend>map_bag_ros</depend>
-  <depend>std_msgs</depend>
   <depend>hector_ground_truth_gazebo_plugins_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->

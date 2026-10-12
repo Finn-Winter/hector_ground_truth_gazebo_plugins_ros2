@@ -8,43 +8,45 @@
 #include <rclcpp/rclcpp.hpp>
 #include <map_bag_msgs/msg/map.hpp>
 #include <gz/plugin/Register.hh>
-#include <gz/sensors/Sensor.hh>
 #include <gz/sim/System.hh>
-
-using namespace gz;
-using namespace sim;
-using namespace systems;
-using namespace rendering;
 
 namespace hector_ground_truth_gazebo_plugins
 {
 
+/*!
+ * Serves ground_truth/generate_elevation_map by projecting the world's *visual* geometry
+ * straight down onto a grid, one cell holding the highest surface point within it.
+ *
+ * The geometry is read from the entity component manager and intersected on the CPU, so the
+ * result is independent of the render engine and available without a running GUI.
+ */
 class ElevationMapGroundTruthPlugin :
-    public System,
-    public ISystemConfigure,
-    public ISystemPostUpdate
+    public gz::sim::System,
+    public gz::sim::ISystemConfigure,
+    public gz::sim::ISystemPostUpdate
 {
 private:
   std::shared_ptr<rclcpp::Node> node_;
   rclcpp::Service<hector_ground_truth_gazebo_plugins_msgs::srv::GenerateGroundTruth>::SharedPtr service_server_;
   rclcpp::Publisher<map_bag_msgs::msg::Map>::SharedPtr publisher_;
-  ScenePtr scene_;
+  //! Valid only while PostUpdate spins the node; the service callback runs inside that spin.
+  const gz::sim::EntityComponentManager *ecm_ = nullptr;
 
 public:
   ElevationMapGroundTruthPlugin();
 
   ~ElevationMapGroundTruthPlugin() override;
 
-  void Configure(const Entity &_entity,
+  void Configure(const gz::sim::Entity &_entity,
                  const std::shared_ptr<const sdf::Element> &_sdf,
-                 EntityComponentManager &_ecm,
-                 EventManager &_eventMgr) override;
+                 gz::sim::EntityComponentManager &_ecm,
+                 gz::sim::EventManager &_eventMgr) override;
 
   void PostUpdate(const gz::sim::UpdateInfo &_info,
                   const gz::sim::EntityComponentManager &_ecm) override;
 
 private:
-  bool GenerateGroundTruthCallback( hector_ground_truth_gazebo_plugins_msgs::srv::GenerateGroundTruth::Request::SharedPtr req,
+  void GenerateGroundTruthCallback( hector_ground_truth_gazebo_plugins_msgs::srv::GenerateGroundTruth::Request::SharedPtr req,
                                     hector_ground_truth_gazebo_plugins_msgs::srv::GenerateGroundTruth::Response::SharedPtr resp );
 };
 }
